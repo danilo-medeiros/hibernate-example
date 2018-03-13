@@ -31,7 +31,31 @@
 		    <groupId>org.jboss.spec.javax.transaction</groupId>
 		    <artifactId>jboss-transaction-api_1.1_spec</artifactId>
 		    <version>1.0.1.Final</version>
-		</dependency>								
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.hibernate/hibernate-c3p0 -->
+		<dependency>
+		    <groupId>org.hibernate</groupId>
+		    <artifactId>hibernate-c3p0</artifactId>
+		    <version>5.2.15.Final</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.hibernate.common/hibernate-commons-annotations -->
+		<dependency>
+		    <groupId>org.hibernate.common</groupId>
+		    <artifactId>hibernate-commons-annotations</artifactId>
+		    <version>5.0.2.Final</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.hibernate/hibernate-annotations -->
+		<dependency>
+		    <groupId>org.hibernate</groupId>
+		    <artifactId>hibernate-annotations</artifactId>
+		    <version>3.5.6-Final</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.postgresql/postgresql -->
+		<dependency>
+		    <groupId>org.postgresql</groupId>
+		    <artifactId>postgresql</artifactId>
+		    <version>42.2.1</version>
+		</dependency>												
 	</dependencies>
 	<build>
 		<finalName>hibernate-example</finalName>
