@@ -1,10 +1,14 @@
 package br.com.loja.dao;
 
+import java.sql.SQLException;
 import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import javax.persistence.PersistenceException;
+
+import org.hibernate.exception.ConstraintViolationException;
 
 import br.com.loja.model.Client;
 
@@ -31,7 +35,7 @@ public class ClientDAO {
 		return entityManager;
 	}
 	
-	private Client getById(final Long id) {
+	public Client getById(final Long id) {
 		return entityManager.find(Client.class, id);
 	}
 	
@@ -40,18 +44,30 @@ public class ClientDAO {
 		return entityManager.createQuery("FROM " + Client.class.getName()).getResultList();
 	}
 	
-	public void persist(Client client) {
+	public Client persist(Client client) {
 		try {
 			entityManager.getTransaction().begin();
 			entityManager.persist(client);
 			entityManager.getTransaction().commit();
-		} catch (Exception e) {
-			e.printStackTrace();
-			entityManager.getTransaction().rollback();
+		} catch (PersistenceException e) {
+			if (e.getCause() instanceof ConstraintViolationException) {
+				ConstraintViolationException exp = (ConstraintViolationException) e.getCause();
+				if (exp.getConstraintName().equals("client_email_key")) {
+					throw new PersistenceException("Conflito: E-mail já cadastrado.");
+				}
+				throw new PersistenceException("Ocorreu um conflito de dados.");
+			}
+			throw new PersistenceException("Erro ao inserir.");
+		} catch (RuntimeException e) {
+			throw e;
+		} finally {
+			if (entityManager.getTransaction().isActive())
+				entityManager.getTransaction().rollback();
 		}
+		return client;
 	}
 	
-	public void merge(Client client) {
+	public Client merge(Client client) {
 		try {
 			entityManager.getTransaction().begin();
 			entityManager.merge(client);
@@ -60,26 +76,30 @@ public class ClientDAO {
 			e.printStackTrace();
 			entityManager.getTransaction().rollback();
 		}
+		return client;
 	}
 	
-	public void remove(Client client) {
+	public boolean remove(Client client) {
 		try {
 			entityManager.getTransaction().begin();
 			client = entityManager.find(Client.class, client.getId());
 			entityManager.remove(client);
 			entityManager.getTransaction().commit();
-		} catch (Exception e) {
-			e.printStackTrace();
-			entityManager.getTransaction().rollback();
+		} catch (NullPointerException e) {
+			throw new NullPointerException("Registro não existe");
+		} finally {
+			if (entityManager.getTransaction().isActive()) 
+				entityManager.getTransaction().rollback();
 		}
+		return true;
 	}
 	
-	public void removeById(final Long id) {
+	public boolean removeById(final Long id) throws RuntimeException {
 		try {
 			Client client = getById(id);
-			remove(client);
-		} catch (Exception e) {
-			e.printStackTrace();
+			return remove(client);
+		} catch (RuntimeException e) {
+			throw e;
 		}
 	}
 	
