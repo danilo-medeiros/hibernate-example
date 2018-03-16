@@ -5,11 +5,11 @@
 	<persistence-unit name="storePU" transaction-type="RESOURCE_LOCAL">
 		<provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
 		<properties>
-			<property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/store"/>
+			<property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/store?ApplicationName=loja"/>
 			<property name="javax.persistence.jdbc.user" value="postgres"/>
 			<property name="javax.persistence.jdbc.password" value="postgres"/>
 			<property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver"/>
-			
+			<property name = "hibernate.show_sql" value = "true" />
 			<!-- create | create-drop | update | validate -->
 			<property name="hibernate.hbm2ddl.auto" value="update"/>
 			<property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect"/>

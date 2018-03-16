@@ -1,19 +1,25 @@
 package br.com.loja.model;
 
 import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
-public class Order {
+@Entity
+@Table(name = "product_order")
+public class ProductOrder {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	@OneToMany(fetch = FetchType.EAGER, mappedBy = "client_id")
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "client_id")
 	private Client client;
 	@Column
 	private double value;
@@ -34,6 +40,10 @@ public class Order {
 	}
 	public void setValue(double value) {
 		this.value = value;
+	}
+	@Override
+	public String toString() {
+		return "ProductOrder [id=" + id + ", client=" + client + ", value=" + value + "]";
 	}
 	
 	
